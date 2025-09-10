@@ -5,9 +5,11 @@
 { config, pkgs, ... }:
 
 {
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./users.nix
     ];
 
   # Bootloader.
@@ -26,21 +28,10 @@
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
+  # time.timeZone = "UTC"; for runners
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
@@ -54,7 +45,6 @@
   services.xserver.xkb = {
     layout = "us";
     variant = "";
-    options = "caps:swapescape";
   };
 
   # Enable CUPS to print documents.
@@ -76,23 +66,16 @@
     #media-session.enable = true;
   };
 
+  # Bluetooth enable
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.david = {
-    isNormalUser = true;
-    description = "David";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-    #  thunderbird
-    ];
-  };
-
-  # Install firefox.
   programs.firefox.enable = true;
 
+  # neovim needed for codium vim to work
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -101,10 +84,27 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    kdePackages.kate
+    vim
     vscodium
-  #  wget
+    git
+    gh          # GitHub CLI
+    openssh
+    gnupg       # if you sign commits
+    wget
   ];
+
+  services.github-runners = {
+    sontric-shh-2 = {
+      enable = true;
+      url = "https://github.com/sontric";
+      tokenFile = "/var/lib/github-runner.token"; # make sure this exists & is root:root 0600
+      extraLabels = [ "nixos" "cmb-data" ];
+      replace = true;         # re-register on config changes
+      ephemeral = true;      # clear cache every run
+      # NOTE: do not set workDir; the module will use .../trust-framework/_work under StateDirectory
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -132,6 +132,6 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+
+  programs.ssh.startAgent = true;  # ssh-agent at login
 }
