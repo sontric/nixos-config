@@ -9,7 +9,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./users.nix
     ];
 
   # Bootloader.
@@ -98,7 +97,7 @@
   ];
 
   services.github-runners = {
-    sontric-shh-2 = {
+    sontric-shr-1 = {
       enable = true;
       url = "https://github.com/sontric";
       tokenFile = "/var/lib/github-runner.token"; # make sure this exists & is root:root 0600
@@ -137,4 +136,10 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
   programs.ssh.startAgent = true;  # ssh-agent at login
+
+  users.users.sontric = {
+    isNormalUser = true;
+    description = "Sontric";
+    extraGroups = [ "networkmanager" "wheel" ];
+  };
 }

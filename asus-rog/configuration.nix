@@ -2,22 +2,18 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./users.nix
     ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # services.logind.lidSwitch = "ignore";
-  services.logind.lidSwitchExternalPower = "ignore";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -98,7 +94,7 @@
   ];
 
   services.github-runners = {
-    sontric-shh-2 = {
+    sontric-shr-2 = {
       enable = true;
       url = "https://github.com/sontric";
       tokenFile = "/var/lib/github-runner.token"; # make sure this exists & is root:root 0600
@@ -137,4 +133,18 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
   programs.ssh.startAgent = true;  # ssh-agent at login
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "obsidian"
+  ];
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.david = {
+    isNormalUser = true;
+    description = "David";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+      obsidian
+    ];
+  };
 }
