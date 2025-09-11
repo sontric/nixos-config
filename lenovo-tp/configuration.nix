@@ -102,8 +102,8 @@
       url = "https://github.com/sontric";
       tokenFile = "/var/lib/github-runner.token"; # make sure this exists & is root:root 0600
       extraLabels = [ "nixos" "cmb-data" ];
-      replace = true;         # re-register on config changes
-      ephemeral = true;      # clear cache every run
+      replace = false;         # re-register on config changes
+      ephemeral = false;      # clear cache every run
       # NOTE: do not set workDir; the module will use .../trust-framework/_work under StateDirectory
     };
   };
