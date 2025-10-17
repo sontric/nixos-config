@@ -21,3 +21,7 @@ and copy to:
 
 ## Rebuild
 `sudo nixos-rebuild switch`
+
+## Check on GH Self-hosted runner and restart
+`systemctl status github-runner-sontric-shr-1.service  
+`systemctl restart github-runner-sontric-shr-1.service`
