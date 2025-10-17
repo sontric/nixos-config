@@ -48,6 +48,8 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = [ pkgs.gutenprint pkgs.hplip ];
+  # gutenprint = generic drivers, hplip = HP printers (remove if not needed)
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -91,6 +93,16 @@
     openssh
     gnupg       # if you sign commits
     wget
+    libreoffice-qt
+    hunspell
+    hunspellDicts.en_US
+    ngspice
+    qucs-s
+    rpi-imager
+  ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "obsidian"
   ];
 
   services.github-runners = {
@@ -133,10 +145,6 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
   programs.ssh.startAgent = true;  # ssh-agent at login
-
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "obsidian"
-  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.david = {
