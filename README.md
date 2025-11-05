@@ -1,18 +1,11 @@
 # nix-config
 NixOS Config files and setup info
 
-## Github setup (if dev environment)  
-`gh auth login`  
-`git config --global user.name "Your Name"`  
-`git config --global user.email "your_email@example.com"`  
-  
-## Clone the repo, or copy manually
-`gh repo clone davidnobles-eng/nixos-config`
-
-## Copy files to
+## Usage  
+On a Nixos system, copy configuration.nix to  
 `/etc/nixos` 
 
-## Edit files as needed  
+## Edit configuration file as needed  
 eg: rename user, remove unfree packages, disable/enable self-hosted runner
 
 ## Create GH Self-hosted runner tokens
@@ -22,6 +15,14 @@ and copy to:
 ## Rebuild
 `sudo nixos-rebuild switch`
 
+## Github setup (if dev environment)  
+`gh auth login`  
+`git config --global user.name "Your Name"`  
+`git config --global user.email "your_email@example.com"`  
+
 ## Check on GH Self-hosted runner and restart
 `systemctl status github-runner-sontric-shr-1.service`  
 `systemctl restart github-runner-sontric-shr-1.service`
+
+## Check on Tailscail
+`sudo tailscale up`
