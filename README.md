@@ -48,3 +48,9 @@ sudo lpadmin -p Brother_MFC_L2900DW \
 sudo lpoptions -d Brother_MFC_L2900DW
 echo "test page" | lp
 ```
+
+## Set Windows as default for boot
+```
+sudo bootctl list
+sudo bootctl set-default auto-windows
+```
