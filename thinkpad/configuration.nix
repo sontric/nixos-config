@@ -108,9 +108,7 @@
     hunspellDicts.en_US
     ngspice
     qucs-s
-    rpi-imager
-    codex
-    aider-chat
+    nodejs_20
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
@@ -167,14 +165,4 @@
       obsidian
     ];
   };
-
-  # Loosen tty perms for common Arduino/clone VIDs (32u4, CH340, CP210x, etc.)
-  services.udev.extraRules = ''
-    # Allow user sessions (uaccess) + dialout group on common Arduino/clone USB-serial adapters
-    ACTION=="add|change", SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", TAG+="uaccess", GROUP="dialout", MODE="0660"
-    ACTION=="add|change", SUBSYSTEM=="tty", ATTRS{idVendor}=="2a03", TAG+="uaccess", GROUP="dialout", MODE="0660"
-    ACTION=="add|change", SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", TAG+="uaccess", GROUP="dialout", MODE="0660"
-    ACTION=="add|change", SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", TAG+="uaccess", GROUP="dialout", MODE="0660"
-    ACTION=="add|change", SUBSYSTEM=="tty", ATTRS{idVendor}=="1b4f", TAG+="uaccess", GROUP="dialout", MODE="0660"
-  '';
 }
