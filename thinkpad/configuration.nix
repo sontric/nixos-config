@@ -40,7 +40,11 @@
   services.xserver.enable = true;
 
   # Tailscale for networking
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "client";
+    extraUpFlags = [ "--ssh" ];
+  };
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
@@ -136,7 +140,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = false;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -152,7 +156,7 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  programs.ssh.startAgent = true;  # ssh-agent at login
+  programs.ssh.startAgent = false;  # ssh-agent at login
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.david = {
