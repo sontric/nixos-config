@@ -61,6 +61,15 @@
   services.printing.drivers = [ pkgs.gutenprint pkgs.hplip ];
   # gutenprint = generic drivers, hplip = HP printers (remove if not needed)
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  # Optional: open firewall for IPP
+  networking.firewall.allowedTCPPorts = [ 631 ];
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
