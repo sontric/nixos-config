@@ -15,7 +15,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "rog-nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -36,6 +36,9 @@
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
 
+  # Tailscale for networking
+  services.tailscale.enable = true;
+
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
@@ -47,9 +50,23 @@
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.printing.drivers = [ pkgs.gutenprint pkgs.hplip ];
-  # gutenprint = generic drivers, hplip = HP printers (remove if not needed)
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [
+      brlaser
+      brgenml1lpr
+      brgenml1cupswrapper
+    ];
+  };
+  # For auto-discovery of network printers (mDNS / AirPrint / IPP Everywhere)
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  # Make sure CUPS port is open if you use a firewall
+  networking.firewall.allowedTCPPorts = [ 631 ];
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -99,14 +116,18 @@
     ngspice
     qucs-s
     rpi-imager
+    codex
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+  nixpkgs.config.allowUnfreePredicate = pkg:
+  builtins.elem (lib.getName pkg) [
+    "brgenml1lpr"
+    "brgenml1cupswrapper"
     "obsidian"
   ];
 
   services.github-runners = {
-    sontric-shr-2 = {
+    sontric-shr-1 = {
       enable = true;
       url = "https://github.com/sontric";
       tokenFile = "/var/lib/github-runner.token"; # make sure this exists & is root:root 0600
