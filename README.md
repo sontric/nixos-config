@@ -34,9 +34,9 @@ systemctl status github-runner-sontric-shr-1.service
 systemctl restart github-runner-sontric-shr-1.service
 ```
 
-## Check on Tailscail
+## Ensure tailscale ssh
 ```
-sudo tailscale up
+sudo tailscale up --ssh
 ```
 
 ## Printer Setup & Test Page
