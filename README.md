@@ -1,3 +1,7 @@
+> **📁 Bureau Records — retired 2026-07.**
+> Merged into [davidnobles-eng/machines](https://github.com/davidnobles-eng/machines)
+> as `nixos/` (history imported). Nothing was deleted; old URLs redirect.
+
 # nix-config
 NixOS Config files and setup info
 
